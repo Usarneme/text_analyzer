@@ -53,13 +53,15 @@ function numberOfOccurrencesInText(word, text) {
 // [a,b,c,d], text = "a b c d"
 function threeMostCommonWords(text) {
   let mostCommonWords = [];
-  const allWords = text.split(" ");
+  const noPunctuationText = replacePunctuationWithSpace(text).trim();
+  const allWords = noPunctuationText.split(" ");
+
   if (allWords.length === 0) return mostCommonWords;
-  // from here on down, there is are least 1 element in the array
+  if (allWords.length === 1) return allWords;
+  // from here on down, there is are least 2 elements in the array
 
   // TODO - this doesn't check if there are duplicates; move down? remove?
-  if ((allWords.length >= 1) && (allWords.length <= 3)) return allWords;
-  // at this point, we know there are more than 3 elements (4+)
+  // if ((allWords.length >= 1) && (allWords.length <= 3)) return allWords;
 
   // have something to keep track of the counts of each word
   const wordCounts = [];
@@ -84,7 +86,7 @@ function threeMostCommonWords(text) {
   // wordCounts = [2,1,1,,1]
   // if all the counts are equal, return an empty array
   let allCountsAreEqual = true;
-  const firstCount = wordsCounts[0];
+  const firstCount = wordCounts[0];
 
   // at this point we have:
   // text = "a b c d"
@@ -98,15 +100,45 @@ function threeMostCommonWords(text) {
       }
     }
   })
-  if (allCountsAreEqual) return mostCommonWords;
-
+  if (allCountsAreEqual) return mostCommonWords; // return an empty array as they all occur at the same frequency
   // now we know there is at least one duplicated word...
+
   // compare the counts of each word, looking for the highest numbers
   // when we change the position of wordCounts (sorting big to small), we also must change the position in allWords
-  // let largest1, largest2, largest3;
-  // wordCounts.forEach(function(element, index) {
-  // })
-  return mostCommonWords;
+  let largest1 = 0
+  const newAllWords = []
+  wordCounts.forEach(function(element, index) {
+    console.log(`looping wordsCount[${index}]: ${element}`)
+    console.log('allWords val at that index: ', allWords[index])
+    if (allWords[index] > largest1) {
+      largest1 = allWords[index]
+      // remove the element from wordCounts and allWords
+
+    }
+  })
+
+  let largest2 = 0
+  let newAllWords2 = []
+  wordCounts.forEach(function(element, index) {
+    console.log(`looping wordsCount[${index}]: ${element}`)
+    console.log('allWords val at that index: ', allWords[index])
+    if (allWords[index] > largest1) {
+      largest2 = allWords[index]
+      // remove the element from wordCounts and allWords
+    }
+  })
+
+  let largest3 = 0
+  wordCounts.forEach(function(element, index) {
+    console.log(`looping wordsCount[${index}]: ${element}`)
+    console.log('allWords val at that index: ', allWords[index])
+    if (allWords[index] > largest1) {
+      largest3 = allWords[index]
+      // remove the element from wordCounts and allWords
+    }
+  })
+
+  return [largest1, largest2, largest3];
 }
 
 
@@ -140,6 +172,10 @@ $(document).ready(function(){
     const word = $("#word").val();
     const wordCount = wordCounter(passage);
     const occurrencesOfWord = numberOfOccurrencesInText(word, passage);
+    const topThreeWords = threeMostCommonWords(passage);
+
+    console.log('got top 3 words back of: ',topThreeWords)
+
     $("#total-count").html(wordCount);
     $("#selected-count").html(occurrencesOfWord);
     $("#bolded-passage").html(boldPassage(word, passage));
